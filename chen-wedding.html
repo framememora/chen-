@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chen Wedding — 08.24.2024</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,200;0,300;0,400;1,200;1,300&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  /*
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  20 CSS ANIMATION & TRANSITION PROPERTIES — WHERE EACH IS USED
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  1.  animation-name          → hero text, petals, shimmer   ║
+  ║  2.  animation-duration      → all @keyframes sequences     ║
+  ║  3.  animation-timing-function → cubic-bezier on key fx     ║
+  ║  4.  animation-delay         → staggered hero entrance      ║
+  ║  5.  animation-iteration-count → infinite on loops          ║
+  ║  6.  animation-direction     → alternate on pulse/float     ║
+  ║  7.  animation-fill-mode     → forwards on entrance anim    ║
+  ║  8.  animation-play-state    → pause pulse on scroll-hover  ║
+  ║  9.  transition-property     → individual (nav, cards)      ║
+  ║  10. transition-duration     → individual (nav, cards)      ║
+  ║  11. transition-timing-function → individual cubic-bezier   ║
+  ║  12. transition-delay        → individual stagger on cards  ║
+  ║  13. will-change             → parallax bg, flip card       ║
+  ║  14. transform-origin        → shimmer, schedule bar, wipe  ║
+  ║  15. transform-style         → preserve-3d on flip cards    ║
+  ║  16. perspective             → 3D flip card container       ║
+  ║  17. perspective-origin      → positioned on travel section ║
+  ║  18. backface-visibility     → hidden on flip card faces    ║
+  ║  19. animation (shorthand)   → hero entrance elements       ║
+  ║  20. transition (shorthand)  → mosaic images, footer etc.   ║
+  ╚══════════════════════════════════════════════════════════════╝
+  */
+
+  :root {
+    --white: #ffffff;
+    --off-white: #faf9f7;
+    --warm-beige: #f2ede6;
+    --light-gray: #e8e4de;
+    --mid-gray: #9a958e;
+    --dark: #1a1a18;
+    --text: #3a3832;
+    --accent: #6b7f6e;
+    --accent-hover: #556159;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  /* ═══════════════════════════════════════════════════════════
+     GLOBAL GRAYSCALE — All images start B&W, reveal on hover.
+     Exceptions (hero, lightbox) override below.
+  ═══════════════════════════════════════════════════════════ */
+  img {
+    filter: grayscale(100%) brightness(0.9);
+    transition: filter 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Direct parent hover — works for any image wrapper */
+  *:hover > img,
+  a:hover img,
+  .story-image-wrap:hover img,
+  .entry-media:hover img,
+  .mosaic-item:hover img,
+  .film-card:hover img,
+  .travel-card:hover img {
+    filter: grayscale(0%) brightness(1);
+  }
+  body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     @KEYFRAMES  (used via animation-name)
+  ════════════════════════════════════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes expandWidth {
+    from { width: 0; }
+    to   { width: 48px; }
+  }
+  /* PROPERTY 6 — animation-direction: alternate (used on pulse & float) */
+  @keyframes pulse {
+    from { opacity: 0.3; transform: scaleY(0.85); }
+    to   { opacity: 1;   transform: scaleY(1.15); }
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg);   opacity: 0.6; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  }
+  /* shimmer sweep for CTA button */
+  @keyframes shimmer {
+    from { transform: translateX(-110%) skewX(-20deg); }
+    to   { transform: translateX(260%)  skewX(-20deg); }
+  }
+  /* slow drift for hero bg — uses animation-direction: alternate */
+  @keyframes driftZoom {
+    from { transform: scale(1) translateY(0); }
+    to   { transform: scale(1.04) translateY(-12px); }
+  }
+  /* schedule bar wipe — transform-origin: left */
+  @keyframes barWipe {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  /* heartbeat for footer ♡ */
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1);    }
+    14%       { transform: scale(1.3);  }
+    28%       { transform: scale(1);    }
+    42%       { transform: scale(1.2);  }
+    56%       { transform: scale(1);    }
+  }
+  /* ripple on timeline dot */
+  @keyframes ripple {
+    from { box-shadow: 0 0 0 0 rgba(107,127,110,0.55); }
+    to   { box-shadow: 0 0 0 18px rgba(107,127,110,0); }
+  }
+  /* 3D card flip */
+  @keyframes flipIn {
+    from { transform: rotateY(-8deg) rotateX(4deg); opacity: 0.6; }
+    to   { transform: rotateY(0)     rotateX(0);    opacity: 1;   }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     NAV
+     PROPERTIES 9–12: transition-property, transition-duration,
+                      transition-timing-function, transition-delay
+  ════════════════════════════════════════════════════════════ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 48px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* ① Spelled-out sub-properties instead of shorthand */
+    transition-property: background, backdrop-filter, border-bottom-color;
+    transition-duration: 0.55s;
+    transition-timing-function: var(--ease-in-out-quart);  /* PROPERTY 11 */
+    transition-delay: 0s;                                   /* PROPERTY 12 */
+  }
+  nav.scrolled {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--light-gray);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+    transition-property: color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+  }
+  nav.scrolled .nav-logo { color: var(--dark); }
+
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.88);
+    text-decoration: none;
+    position: relative;
+    transition-property: color;
+    transition-duration: 0.35s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+  }
+  nav.scrolled .nav-links a { color: var(--mid-gray); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 0; height: 1px;
+    background: currentColor;
+    /* PROPERTY 9–12 on underline */
+    transition-property: width;
+    transition-duration: 0.32s;
+    transition-timing-function: var(--ease-out-expo);
+    transition-delay: 0s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  nav.scrolled .nav-links a:hover { color: var(--dark); }
+
+  /* ════════════════════════════════════════════════════════════
+     HERO
+  ════════════════════════════════════════════════════════════ */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.06) 45%, rgba(0,0,0,0.42) 100%),
+      url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1800&q=85&auto=format&fit=crop') center/cover no-repeat;
+    /* PROPERTY 13 — will-change: transform (parallax + zoom) */
+    will-change: transform;
+    /* PROPERTY 1 — animation-name */
+    animation-name: driftZoom;
+    /* PROPERTY 2 — animation-duration */
+    animation-duration: 18s;
+    /* PROPERTY 3 — animation-timing-function */
+    animation-timing-function: var(--ease-in-out-quart);
+    /* PROPERTY 5 — animation-iteration-count */
+    animation-iteration-count: infinite;
+    /* PROPERTY 6 — animation-direction: alternate (reverses every cycle) */
+    animation-direction: alternate;
+    /* PROPERTY 7 — animation-fill-mode */
+    animation-fill-mode: both;
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    color: var(--white);
+    padding: 0 24px;
+    z-index: 2;
+  }
+
+  /* ─── Floating petal particles (decorative) ─── */
+  .petal {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 50% 0 50% 0;
+    pointer-events: none;
+    /* PROPERTY 1 */
+    animation-name: floatUp;
+    /* PROPERTY 2 */
+    animation-duration: 8s;
+    /* PROPERTY 3 */
+    animation-timing-function: linear;
+    /* PROPERTY 5 */
+    animation-iteration-count: infinite;
+    /* PROPERTY 6 — alternate makes them sway gently */
+    animation-direction: normal;
+    /* PROPERTY 7 */
+    animation-fill-mode: none;
+  }
+  .petal:nth-child(1)  { left: 10%; width:5px;  height:5px;  animation-duration:9s;  animation-delay:0s;    }
+  .petal:nth-child(2)  { left: 22%; width:4px;  height:4px;  animation-duration:7s;  animation-delay:1.3s;  }
+  .petal:nth-child(3)  { left: 35%; width:7px;  height:7px;  animation-duration:11s; animation-delay:2.8s;  }
+  .petal:nth-child(4)  { left: 50%; width:4px;  height:4px;  animation-duration:8s;  animation-delay:0.6s;  }
+  .petal:nth-child(5)  { left: 64%; width:6px;  height:6px;  animation-duration:10s; animation-delay:1.9s;  }
+  .petal:nth-child(6)  { left: 78%; width:5px;  height:5px;  animation-duration:7.5s;animation-delay:3.4s;  }
+  .petal:nth-child(7)  { left: 88%; width:8px;  height:8px;  animation-duration:13s; animation-delay:0.4s;  }
+  .petal:nth-child(8)  { left: 5%;  width:4px;  height:4px;  animation-duration:9.5s;animation-delay:4.1s;  }
+
+  /* PROPERTY 19 — animation shorthand for hero text entrance */
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 1.1s var(--ease-out-expo) 0.4s forwards;
+  }
+  .hero-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: clamp(56px, 8vw, 96px);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1.2s var(--ease-out-expo) 0.7s forwards;
+  }
+  .hero-names em { font-style: italic; }
+
+  .hero-divider {
+    width: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 auto 24px;
+    /* PROPERTY 1,2,3,4,7 all explicit — shorthand below */
+    animation-name: expandWidth;
+    animation-duration: 0.9s;
+    animation-timing-function: var(--ease-out-expo);
+    animation-delay: 1.05s;
+    animation-fill-mode: forwards;
+    /* PROPERTY 14 — transform-origin: center so it expands from middle */
+    transform-origin: center;
+  }
+
+  .hero-date {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 14px;
+    letter-spacing: 0.28em;
+    opacity: 0;
+    animation: fadeUp 1.1s var(--ease-out-expo) 1.15s forwards;
+  }
+
+  /* ─── CTA Button — shimmer + individual transitions ─── */
+  .hero-cta {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-top: 48px;
+    padding: 15px 40px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--accent);
+    text-decoration: none;
+    border-radius: 2px;
+    opacity: 0;
+    animation: fadeUp 1.1s var(--ease-out-expo) 1.45s forwards;
+    /* PROPERTY 13 — will-change for GPU layer */
+    will-change: transform, box-shadow;
+    /* PROPERTY 9–12 — individual transition sub-props */
+    transition-property: background, transform, box-shadow;
+    transition-duration: 0.38s;
+    transition-timing-function: var(--ease-out-expo);
+    transition-delay: 0s;
+  }
+  /* Shimmer pseudo-element */
+  .hero-cta::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+    /* PROPERTY 14 — transform-origin: left so sweep starts from edge */
+    transform-origin: left center;
+    /* PROPERTY 8 — animation-play-state: paused by default, running on hover */
+    animation-name: shimmer;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0s;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+  .hero-cta:hover::after {
+    /* PROPERTY 8 — animation-play-state: running on hover */
+    animation-play-state: running;
+  }
+  .hero-cta:hover {
+    background: var(--accent-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.22);
+  }
+
+  /* ─── Scroll indicator ─── */
+  .hero-scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.6);
+    opacity: 0;
+    animation: fadeIn 1s ease 2.1s forwards;
+  }
+  .hero-scroll span {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.4);
+    transform-origin: top center;             /* PROPERTY 14 */
+    /* PROPERTY 1–7 all individually set */
+    animation-name: pulse;
+    animation-duration: 1.8s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 2.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;           /* PROPERTY 6 */
+    animation-fill-mode: both;               /* PROPERTY 7 */
+    /* PROPERTY 8 — pause when user hovers the scroll hint */
+    animation-play-state: running;
+  }
+  .hero-scroll:hover .scroll-line {
+    animation-play-state: paused;             /* PROPERTY 8 */
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION BASE
+  ════════════════════════════════════════════════════════════ */
+  section { padding: 120px 0; }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+  .section-label {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; }
+
+  /* ─── REVEAL ON SCROLL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    /* PROPERTY 20 — transition shorthand for reveals */
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  /* PROPERTY 12 — transition-delay for staggered children */
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ════════════════════════════════════════════════════════════
+     STORY
+  ════════════════════════════════════════════════════════════ */
+  #story { background: var(--white); }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 64px;
+  }
+  .story-image-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .story-image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(107,127,110,0.08));
+  }
+  .story-image-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) brightness(0.92);
+    /* PROPERTY 20 — transition shorthand */
+    transition: transform 0.9s var(--ease-out-expo), filter 0.65s var(--ease-out-expo);
+  }
+  .story-image-wrap:hover img {
+    transform: scale(1.04);
+    filter: grayscale(0%) brightness(1);
+  }
+  .story-text { padding: 24px 0; }
+  .story-text p {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--text);
+    max-width: 480px;
+  }
+  .story-text p + p { margin-top: 20px; }
+  .story-pull-quote {
+    margin-top: 40px;
+    padding-left: 24px;
+    border-left: 2px solid var(--accent);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--accent);
+  }
+
+  /* ─── DIVIDER ─── */
+  .section-divider {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 48px;
+    border: none;
+    border-top: 1px solid var(--light-gray);
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     SCHEDULE — bar wipe uses transform-origin: left (PROPERTY 14)
+  ════════════════════════════════════════════════════════════ */
+  #schedule { background: var(--off-white); }
+  .schedule-grid { margin-top: 64px; display: grid; gap: 0; }
+  .schedule-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    padding: 36px 0;
+    border-bottom: 1px solid var(--light-gray);
+    align-items: start;
+    position: relative;
+  }
+  .schedule-item:first-child { border-top: 1px solid var(--light-gray); }
+  /* Animated accent bar on left side */
+  .schedule-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 36px;
+    width: 2px;
+    height: calc(100% - 72px);
+    background: var(--accent);
+    /* PROPERTY 14 — transform-origin: top so it wipes downward */
+    transform-origin: top center;
+    transform: scaleY(0);
+    /* PROPERTY 9–12 individually on this pseudo */
+    transition-property: transform;
+    transition-duration: 0.55s;
+    transition-timing-function: var(--ease-out-expo);
+    transition-delay: 0.1s;
+  }
+  .schedule-item.visible::before { transform: scaleY(1); }
+  .schedule-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: 28px;
+    color: var(--mid-gray);
+    padding-top: 4px;
+    padding-left: 20px;
+  }
+  .schedule-icon { width: 24px; height: 24px; margin-bottom: 12px; color: var(--accent); }
+  .schedule-event { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 22px; color: var(--dark); margin-bottom: 8px; }
+  .schedule-venue { font-size: 14px; font-weight: 300; letter-spacing: 0.08em; color: var(--mid-gray); margin-bottom: 8px; }
+  .schedule-desc { font-size: 16px; line-height: 1.65; color: var(--text); max-width: 440px; }
+
+  /* ════════════════════════════════════════════════════════════
+     TRAVEL — 3D FLIP CARDS
+     PROPERTIES 15 (transform-style), 16 (perspective),
+                17 (perspective-origin), 18 (backface-visibility)
+  ════════════════════════════════════════════════════════════ */
+  #travel { background: var(--white); }
+
+  /* PROPERTY 17 — perspective-origin positioned off-center for dramatic depth */
+  .travel-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 64px;
+    perspective: 1200px;                    /* PROPERTY 16 */
+    perspective-origin: 50% 30%;           /* PROPERTY 17 */
+  }
+
+  .travel-card {
+    position: relative;
+    height: 320px;
+    /* PROPERTY 15 — preserve-3d so children exist in 3D space */
+    transform-style: preserve-3d;
+    /* PROPERTY 13 — will-change for the flip */
+    will-change: transform;
+    /* PROPERTY 20 — transition shorthand */
+    transition: transform 0.72s var(--ease-in-out-quart), box-shadow 0.4s ease;
+    cursor: default;
+    border-radius: 4px;
+  }
+  .travel-card:hover {
+    transform: rotateY(180deg);
+    box-shadow: 0 24px 56px rgba(0,0,0,0.14);
+  }
+
+  .travel-card-front,
+  .travel-card-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 4px;
+    padding: 40px 36px;
+    /* PROPERTY 18 — hide each face when it's facing away */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .travel-card-front {
+    background: var(--off-white);
+    display: flex;
+    flex-direction: column;
+  }
+  .travel-card-back {
+    background: var(--accent);
+    color: white;
+    /* rotated 180° so it starts face-down */
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .travel-card-icon { width: 28px; height: 28px; color: var(--accent); margin-bottom: 20px; }
+  .travel-card-front h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 22px;
+    color: var(--dark);
+    margin-bottom: 12px;
+  }
+  .travel-card-front p { font-size: 15px; line-height: 1.7; color: var(--mid-gray); }
+  .travel-card-front a {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    transition: opacity 0.25s;
+  }
+  .travel-card-back h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: 26px;
+    color: white;
+    font-style: italic;
+  }
+  .travel-card-back p { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.8); }
+  .travel-card-back .back-cta {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    padding-bottom: 3px;
+    text-decoration: none;
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     MEMORIES ALBUM
+  ════════════════════════════════════════════════════════════ */
+  #gallery { background: var(--dark); padding: 120px 0; }
+  #gallery .section-label { color: rgba(255,255,255,0.35); }
+  #gallery .section-title { color: var(--white); }
+  #gallery .section-title em { color: var(--accent); }
+
+  .album-tabs {
+    display: flex; gap: 0;
+    margin-top: 56px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .album-tabs::-webkit-scrollbar { display: none; }
+  .album-tab {
+    flex-shrink: 0;
+    padding: 14px 28px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.38);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    margin-bottom: -1px;
+    /* PROPERTY 9–12 spelled out */
+    transition-property: color, border-bottom-color;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+  }
+  .album-tab:hover { color: rgba(255,255,255,0.7); }
+  .album-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+
+  .album-panel { display: none; }
+  .album-panel.active { display: block; }
+
+  /* Timeline */
+  .timeline { margin-top: 64px; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(255,255,255,0.08);
+    transform: translateX(-50%);
+  }
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 1fr 64px 1fr;
+    gap: 0;
+    margin-bottom: 80px;
+    align-items: center;
+  }
+  .timeline-entry:last-child { margin-bottom: 0; }
+  .timeline-entry.right .entry-media { grid-column: 3; grid-row: 1; }
+  .timeline-entry.right .entry-text  { grid-column: 1; grid-row: 1; text-align: right; padding-right: 48px; }
+  .timeline-entry.left  .entry-media { grid-column: 1; grid-row: 1; }
+  .timeline-entry.left  .entry-text  { grid-column: 3; grid-row: 1; padding-left: 48px; }
+
+  /* Timeline dot — ripple */
+  .timeline-dot {
+    grid-column: 2; grid-row: 1;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+  .timeline-dot span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: block;
+    /* PROPERTY 1 */  animation-name: ripple;
+    /* PROPERTY 2 */  animation-duration: 2.2s;
+    /* PROPERTY 3 */  animation-timing-function: ease-out;
+    /* PROPERTY 4 */  animation-delay: 0.5s;
+    /* PROPERTY 5 */  animation-iteration-count: infinite;
+    /* PROPERTY 6 */  animation-direction: normal;
+    /* PROPERTY 7 */  animation-fill-mode: none;
+  }
+
+  .entry-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+    cursor: pointer;
+    transform-style: preserve-3d;   /* PROPERTY 15 */
+  }
+  .entry-media img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%) brightness(0.88);
+    /* PROPERTY 20 shorthand */
+    transition: transform 0.7s var(--ease-out-expo), filter 0.65s var(--ease-out-expo), box-shadow 0.4s ease;
+  }
+  .entry-media:hover img {
+    transform: scale(1.04);
+    filter: grayscale(0%) brightness(1);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  /* flipIn entrance on reveal */
+  .entry-media.visible {
+    animation-name: flipIn;
+    animation-duration: 0.9s;
+    animation-timing-function: var(--ease-out-expo);
+    animation-fill-mode: both;
+  }
+  .entry-media-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 36px 24px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%);
+    color: rgba(255,255,255,0.8);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.4s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .entry-media:hover .entry-media-caption { opacity: 1; }
+  .entry-media-caption svg { flex-shrink: 0; }
+  .entry-year { font-family: 'Cormorant Garamond', serif; font-weight: 200; font-size: 13px; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 10px; }
+  .entry-title { font-family: 'Cormorant Garamond', serif; font-weight: 200; font-size: 28px; line-height: 1.2; color: var(--white); margin-bottom: 14px; }
+  .entry-title em { font-style: italic; }
+  .entry-desc { font-size: 15px; line-height: 1.72; color: rgba(255,255,255,0.48); max-width: 300px; }
+  .timeline-entry.right .entry-desc { margin-left: auto; }
+
+  /* Mosaic */
+  .mosaic { margin-top: 48px; display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 80px; gap: 10px; }
+  .mosaic-item { overflow: hidden; border-radius: 3px; cursor: pointer; position: relative; }
+  .mosaic-item img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: grayscale(100%) brightness(0.85);
+    /* PROPERTY 20 */
+    transition: transform 0.6s var(--ease-out-expo), filter 0.65s var(--ease-out-expo);
+    /* PROPERTY 14 */
+    transform-origin: center center;
+  }
+  .mosaic-item:hover img { transform: scale(1.06); filter: grayscale(0%) brightness(1.02); }
+  .mosaic-item .entry-media-caption { opacity: 0; transition: opacity 0.35s ease; }
+  .mosaic-item:hover .entry-media-caption { opacity: 1; }
+  .m1 { grid-column: span 5; grid-row: span 5; }
+  .m2 { grid-column: span 4; grid-row: span 3; }
+  .m3 { grid-column: span 3; grid-row: span 3; }
+  .m4 { grid-column: span 4; grid-row: span 4; }
+  .m5 { grid-column: span 3; grid-row: span 4; }
+  .m6 { grid-column: span 5; grid-row: span 3; }
+  .m7 { grid-column: span 4; grid-row: span 3; }
+  .m8 { grid-column: span 3; grid-row: span 3; }
+
+  /* Film strip */
+  .film-strip { margin-top: 48px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .film-card { position: relative; cursor: pointer; border-radius: 3px; overflow: hidden; }
+  .film-card img {
+    width: 100%; display: block; object-fit: cover;
+    filter: grayscale(100%) brightness(0.85);
+    transition: transform 0.6s var(--ease-out-expo), filter 0.65s var(--ease-out-expo);
+  }
+  .film-card:hover img { transform: scale(1.04); filter: grayscale(0%) brightness(1.02); }
+  .film-card-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 48px 20px 16px; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); }
+  .film-card-moment { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: white; margin-bottom: 4px; }
+  .film-card-date { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .film-card-wide { grid-column: span 2; }
+  .film-card-wide img { aspect-ratio: 16/7; }
+  .film-card:not(.film-card-wide) img { aspect-ratio: 3/4; }
+
+  /* Lightbox */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.94);
+    align-items: center; justify-content: center;
+    padding: 40px; cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; animation: fadeIn 0.25s ease; }
+  .lightbox-img { max-width: 90vw; max-height: 88vh; object-fit: contain; border-radius: 2px; filter: grayscale(0%); cursor: default; animation: fadeIn 0.3s ease; }
+  .lightbox-close { position: absolute; top: 24px; right: 32px; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 28px; cursor: pointer; line-height: 1; transition: color 0.2s; }
+  .lightbox-close:hover { color: white; }
+  .lightbox-caption { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; text-align: center; white-space: nowrap; }
+  .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.45); font-size: 36px; cursor: pointer; padding: 16px; transition: color 0.2s; line-height: 1; }
+  .lightbox-nav:hover { color: white; }
+  .lightbox-nav.prev { left: 16px; }
+  .lightbox-nav.next { right: 16px; }
+
+  /* ════════════════════════════════════════════════════════════
+     REGISTRY
+  ════════════════════════════════════════════════════════════ */
+  #registry { background: var(--white); text-align: center; }
+  .registry-inner { max-width: 560px; margin: 0 auto; }
+  .registry-inner p { font-size: 18px; line-height: 1.75; color: var(--text); margin-bottom: 40px; }
+  .registry-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .registry-btn {
+    display: inline-block;
+    padding: 14px 36px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    /* PROPERTY 9–12 individually for registry buttons */
+    transition-property: background, color, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: var(--ease-out-expo);
+    transition-delay: 0s;
+  }
+  .registry-btn.primary { background: var(--accent); color: white; }
+  .registry-btn.primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+  .registry-btn.secondary { border: 1px solid var(--light-gray); color: var(--text); }
+  .registry-btn.secondary:hover { background: var(--off-white); transform: translateY(-2px); }
+
+  /* ════════════════════════════════════════════════════════════
+     RSVP
+  ════════════════════════════════════════════════════════════ */
+  #rsvp { background: var(--dark); color: white; }
+  #rsvp .section-label { color: rgba(255,255,255,0.4); }
+  #rsvp .section-title { color: var(--white); }
+  .rsvp-inner {
+    max-width: 600px;
+    margin-top: 56px;
+  }
+  .rsvp-inner p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.58);
+    margin-bottom: 40px;
+  }
+  .rsvp-deadline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .form-field.full { grid-column: span 2; }
+  .form-field label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 2px;
+    padding: 14px 18px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    color: white;
+    outline: none;
+    transition: border-color 0.25s;
+    width: 100%;
+  }
+  .form-field select {
+    appearance: none;
+    cursor: pointer;
+  }
+  .form-field textarea { resize: vertical; min-height: 100px; }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    color: rgba(255,255,255,0.25);
+  }
+  .form-submit {
+    margin-top: 28px;
+    display: inline-block;
+    padding: 15px 48px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .form-submit:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--warm-beige);
+    padding: 60px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--light-gray);
+  }
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 200;
+    font-size: 24px;
+    color: var(--dark);
+    letter-spacing: 0.05em;
+  }
+  .footer-date {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    margin-top: 6px;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--mid-gray);
+    letter-spacing: 0.05em;
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     FOOTER — heartbeat ♡ uses animation-direction: alternate
+  ════════════════════════════════════════════════════════════ */
+  footer {
+    background: var(--warm-beige);
+    padding: 60px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--light-gray);
+  }
+  .footer-name { font-family: 'Cormorant Garamond', serif; font-weight: 200; font-size: 24px; color: var(--dark); letter-spacing: 0.05em; }
+  .footer-date { font-family: 'Jost', sans-serif; font-weight: 200; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mid-gray); margin-top: 6px; }
+  .footer-copy { font-size: 12px; color: var(--mid-gray); letter-spacing: 0.05em; }
+  /* Heartbeat on the ♡ character */
+  .footer-heart {
+    display: inline-block;
+    color: var(--accent);
+    /* PROPERTY 19 — animation shorthand */
+    animation: heartbeat 2.8s ease-in-out 4s infinite;
+    /* individual properties override shorthand for direction */
+    animation-direction: normal;   /* PROPERTY 6 */
+    animation-fill-mode: none;     /* PROPERTY 7 */
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { gap: 20px; }
+    .container { padding: 0 24px; }
+    .story-grid { grid-template-columns: 1fr; gap: 40px; }
+    .travel-cards { grid-template-columns: 1fr 1fr; perspective-origin: 50% 50%; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .timeline::before { left: 0; }
+    .timeline-entry { grid-template-columns: 1fr; gap: 24px; }
+    .timeline-entry.left .entry-media,
+    .timeline-entry.right .entry-media { grid-column: 1; grid-row: 1; }
+    .timeline-entry.left .entry-text,
+    .timeline-entry.right .entry-text { grid-column: 1; grid-row: 2; text-align: left; padding: 0; }
+    .timeline-entry.right .entry-desc { margin-left: 0; }
+    .timeline-dot { display: none; }
+    .mosaic { grid-template-columns: repeat(6, 1fr); }
+    .m1 { grid-column: span 4; grid-row: span 4; }
+    .m2 { grid-column: span 2; grid-row: span 2; }
+    .m3 { grid-column: span 4; grid-row: span 2; }
+    .m6 { grid-column: span 4; grid-row: span 2; }
+    .m7 { grid-column: span 3; grid-row: span 2; }
+    .m8 { grid-column: span 3; grid-row: span 2; }
+    .film-strip { grid-template-columns: 1fr 1fr; }
+    .film-card-wide { grid-column: span 2; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .schedule-item { grid-template-columns: 1fr; gap: 12px; }
+    .travel-cards { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-field.full { grid-column: span 1; }
+    .mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; }
+    .m1,.m2,.m3,.m4,.m5,.m6,.m7,.m8 { grid-column: span 1; grid-row: span 1; }
+    .m1 { grid-column: span 2; grid-row: span 2; }
+    .film-strip { grid-template-columns: 1fr; }
+    .film-card-wide { grid-column: span 1; }
+    .lightbox-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">C & L</a>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#travel">Travel</a></li>
+    <li><a href="#registry">Registry</a></li>
+    <li><a href="#rsvp">RSVP</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="hero-bg"></div>
+  <!-- Floating petals (animation-direction, animation-iteration-count) -->
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="petal"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Together Forever</p>
+    <h1 class="hero-names">
+      <em>Mr. &amp; Mrs.</em><br>Chen
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-date">08 · 24 · 2024</p>
+    <a href="#schedule" class="hero-cta">View the Weekend</a>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-image-wrap reveal">
+        <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80&auto=format&fit=crop" alt="The couple" loading="lazy">
+      </div>
+      <div class="story-text">
+        <p class="section-label reveal">Our Story</p>
+        <h2 class="section-title reveal reveal-delay-1">How It All<br><em>Began</em></h2>
+        <p class="reveal reveal-delay-2">It started with a shared umbrella on a rainy Tuesday in San Francisco — a chance encounter that neither of us had planned. What followed was three years of morning coffee runs, quiet bookstores, long hikes, and the slow, certain realization that home is a person, not a place.</p>
+        <p class="reveal reveal-delay-3">On a crisp December evening overlooking the bay, with the city glittering below, we decided to make it official. This August, we celebrate with the people we love most.</p>
+        <blockquote class="story-pull-quote reveal reveal-delay-4">
+          "In all the world, there is no heart for me like yours."
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <div class="container">
+    <p class="section-label reveal">August 24, 2024</p>
+    <h2 class="section-title reveal reveal-delay-1">The <em>Weekend</em></h2>
+    <div class="schedule-grid">
+
+      <div class="schedule-item reveal">
+        <div class="schedule-time">4:00 PM</div>
+        <div class="schedule-detail">
+          <svg class="schedule-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M12 22C12 22 4 16 4 9a8 8 0 0116 0c0 7-8 13-8 13z"/><circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <div class="schedule-event">Ceremony</div>
+          <div class="schedule-venue">Carmel Valley Ranch · Carmel, CA</div>
+          <p class="schedule-desc">Join us as we exchange vows in the open-air garden pavilion, surrounded by oak trees and the rolling hills of the valley.</p>
+        </div>
+      </div>
+
+      <div class="schedule-item reveal reveal-delay-1">
+        <div class="schedule-time">5:30 PM</div>
+        <div class="schedule-detail">
+          <svg class="schedule-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M8 21h8M12 17v4M5 3h14l-1 10a4 4 0 01-4 4h-4a4 4 0 01-4-4L5 3z"/>
+          </svg>
+          <div class="schedule-event">Cocktail Hour</div>
+          <div class="schedule-venue">The Terrace Lawn · Carmel Valley Ranch</div>
+          <p class="schedule-desc">Sip seasonal cocktails and light bites as the sun sets over the valley. Our favorite songs, your best company.</p>
+        </div>
+      </div>
+
+      <div class="schedule-item reveal reveal-delay-2">
+        <div class="schedule-time">7:00 PM</div>
+        <div class="schedule-detail">
+          <svg class="schedule-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+          </svg>
+          <div class="schedule-event">Dinner &amp; Dancing</div>
+          <div class="schedule-venue">The Grand Ballroom · Carmel Valley Ranch</div>
+          <p class="schedule-desc">A four-course dinner followed by an evening of dancing under the stars. Black tie optional.</p>
+        </div>
+      </div>
+
+      <div class="schedule-item reveal reveal-delay-3">
+        <div class="schedule-time">Sun, Aug 25</div>
+        <div class="schedule-detail">
+          <svg class="schedule-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <div class="schedule-event">Farewell Brunch</div>
+          <div class="schedule-venue">The Sunrise Terrace · 10:00 AM</div>
+          <p class="schedule-desc">A relaxed send-off brunch the following morning. Come as you are — mimosas included.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- TRAVEL -->
+<section id="travel">
+  <div class="container">
+    <p class="section-label reveal">Getting There</p>
+    <h2 class="section-title reveal reveal-delay-1">Travel &amp; <em>Accommodations</em></h2>
+    <div class="travel-cards">
+
+      <div class="travel-card reveal">
+        <div class="travel-card-front">
+          <svg class="travel-card-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M21 16v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <h3>Venue Hotel</h3>
+          <p>A block of rooms has been reserved at Carmel Valley Ranch. Use code <strong style="color: var(--accent); font-weight:400">CHEN2024</strong> for a preferred rate.</p>
+          <a href="#">Book Your Room →</a>
+        </div>
+        <div class="travel-card-back">
+          <h3>Staying with Us</h3>
+          <p>Shuttle service runs between the hotel and all event locations. Check-in from 3 PM, check-out by 11 AM.</p>
+          <a href="#" class="back-cta">View Room Options →</a>
+        </div>
+      </div>
+
+      <div class="travel-card reveal reveal-delay-1">
+        <div class="travel-card-front">
+          <svg class="travel-card-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="M21 3L3 10.5v.5l7 3 3 7h.5L21 3z"/>
+          </svg>
+          <h3>By Air</h3>
+          <p>Fly into Monterey Regional Airport (MRY), just 25 minutes away. SJC and SFO are accessible within 2 hours.</p>
+          <a href="#">Find Flights →</a>
+        </div>
+        <div class="travel-card-back">
+          <h3>Airport Transfers</h3>
+          <p>We recommend renting a car for flexibility. Rideshares are also available from MRY. Airport parking is complimentary.</p>
+          <a href="#" class="back-cta">Get Directions →</a>
+        </div>
+      </div>
+
+      <div class="travel-card reveal reveal-delay-2">
+        <div class="travel-card-front">
+          <svg class="travel-card-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          <h3>By Car</h3>
+          <p>Carmel Valley Ranch is at 1 Old Ranch Rd, Carmel, CA 93923. Complimentary valet for all guests throughout the weekend.</p>
+          <a href="#">Get Directions →</a>
+        </div>
+        <div class="travel-card-back">
+          <h3>Driving Tips</h3>
+          <p>Take US-1 south from San Francisco — the coastal views are stunning. Allow 2.5–3 hours with traffic. Parking is complimentary.</p>
+          <a href="#" class="back-cta">Open in Maps →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- MEMORIES ALBUM -->
+<section id="gallery">
+  <div class="container">
+    <p class="section-label reveal">Our Album</p>
+    <h2 class="section-title reveal reveal-delay-1">Moments That<br><em>Made Us</em></h2>
+
+    <!-- Chapter Tabs -->
+    <div class="album-tabs reveal reveal-delay-2">
+      <button class="album-tab active" data-panel="journey">The Journey</button>
+      <button class="album-tab" data-panel="engagement">Engagement</button>
+      <button class="album-tab" data-panel="proposal">The Proposal</button>
+      <button class="album-tab" data-panel="adventures">Adventures</button>
+    </div>
+
+    <!-- ── PANEL 1: Journey / Timeline ── -->
+    <div class="album-panel active" id="panel-journey">
+      <div class="timeline">
+
+        <div class="timeline-entry left reveal">
+          <div class="entry-media" style="aspect-ratio:4/3;" data-lb-src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Where it all began — San Francisco, 2021">
+            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=900&q=82&auto=format&fit=crop" alt="First meeting San Francisco" loading="lazy">
+            <div class="entry-media-caption">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              View full photo
+            </div>
+          </div>
+          <div class="timeline-dot"><span></span></div>
+          <div class="entry-text">
+            <div class="entry-year">2021 · Chapter I</div>
+            <h3 class="entry-title">A Rainy Tuesday<br><em>in San Francisco</em></h3>
+            <p class="entry-desc">One shared umbrella, two strangers, and a coffee shop that neither of us had planned to enter. We talked for four hours and forgot to check the time.</p>
+          </div>
+        </div>
+
+        <div class="timeline-entry right reveal">
+          <div class="entry-text">
+            <div class="entry-year">2021 · Chapter II</div>
+            <h3 class="entry-title">The First<br><em>Real Date</em></h3>
+            <p class="entry-desc">A candlelit dinner in North Beach that stretched well past midnight. We shared a tiramisu and realized, quietly, that something had shifted.</p>
+          </div>
+          <div class="timeline-dot"><span></span></div>
+          <div class="entry-media" style="aspect-ratio:4/3;" data-lb-src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=85&auto=format&fit=crop" data-lb-caption="First dinner date — North Beach, 2021">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=82&auto=format&fit=crop" alt="First date dinner" loading="lazy">
+            <div class="entry-media-caption">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              View full photo
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-entry left reveal">
+          <div class="entry-media" style="aspect-ratio:4/3;" data-lb-src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Big Sur Road Trip — Summer 2022">
+            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=82&auto=format&fit=crop" alt="Big Sur road trip" loading="lazy">
+            <div class="entry-media-caption">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              View full photo
+            </div>
+          </div>
+          <div class="timeline-dot"><span></span></div>
+          <div class="entry-text">
+            <div class="entry-year">2022 · Chapter III</div>
+            <h3 class="entry-title">Summer on<br><em>the Coast</em></h3>
+            <p class="entry-desc">A spontaneous five-day road trip down Highway 1. No agenda, no reservations — just the Pacific, a borrowed playlist, and the feeling of forever.</p>
+          </div>
+        </div>
+
+        <div class="timeline-entry right reveal">
+          <div class="entry-text">
+            <div class="entry-year">2022 · Chapter IV</div>
+            <h3 class="entry-title">Meeting the<br><em>Families</em></h3>
+            <p class="entry-desc">Thanksgiving in Marin. Two families around one table, and the moment we both knew — this was the beginning of something much larger than the two of us.</p>
+          </div>
+          <div class="timeline-dot"><span></span></div>
+          <div class="entry-media" style="aspect-ratio:4/3;" data-lb-src="https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Thanksgiving with family — 2022">
+            <img src="https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=900&q=82&auto=format&fit=crop" alt="Family gathering" loading="lazy">
+            <div class="entry-media-caption">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              View full photo
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-entry left reveal">
+          <div class="entry-media" style="aspect-ratio:4/3;" data-lb-src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200&q=85&auto=format&fit=crop" data-lb-caption="The ring — December 2023">
+            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&q=82&auto=format&fit=crop" alt="The engagement ring" loading="lazy">
+            <div class="entry-media-caption">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              View full photo
+            </div>
+          </div>
+          <div class="timeline-dot"><span></span></div>
+          <div class="entry-text">
+            <div class="entry-year">2023 · Chapter V</div>
+            <h3 class="entry-title"><em>She Said</em><br>Yes</h3>
+            <p class="entry-desc">Under a December sky, overlooking the glittering bay — a ring, a question, and a yes that changed everything. The happiest moment of our lives, so far.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: Engagement Mosaic ── -->
+    <div class="album-panel" id="panel-engagement">
+      <div class="mosaic reveal">
+        <div class="mosaic-item m1" data-lb-src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Engagement session — Carmel, 2023">
+          <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=900&q=82&auto=format&fit=crop" alt="Engagement photo" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m2" data-lb-src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Golden hour walk — Carmel Beach">
+          <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=700&q=82&auto=format&fit=crop" alt="Couple at beach" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m3" data-lb-src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&q=85&auto=format&fit=crop" data-lb-caption="A quiet moment">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=82&auto=format&fit=crop" alt="Quiet moment" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m4" data-lb-src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Sunset portrait — Point Lobos">
+          <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=700&q=82&auto=format&fit=crop" alt="Couple at sunset" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m5" data-lb-src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=1200&q=85&auto=format&fit=crop" data-lb-caption="In bloom — Spring 2023">
+          <img src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=600&q=82&auto=format&fit=crop" alt="Flowers" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m6" data-lb-src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Details — engagement session">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900&q=82&auto=format&fit=crop" alt="Wedding detail" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m7" data-lb-src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Laughing together — always">
+          <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=700&q=82&auto=format&fit=crop" alt="Laughing couple" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+        <div class="mosaic-item m8" data-lb-src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200&q=85&auto=format&fit=crop" data-lb-caption="The ring that started it all">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&q=82&auto=format&fit=crop" alt="Engagement ring" loading="lazy">
+          <div class="entry-media-caption">View full photo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: Proposal Film Cards ── -->
+    <div class="album-panel" id="panel-proposal">
+      <div class="film-strip reveal" style="margin-top:48px;">
+        <div class="film-card" data-lb-src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=85&auto=format&fit=crop" data-lb-caption="The night everything changed — December 2023">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=82&auto=format&fit=crop" alt="Proposal night" loading="lazy">
+          <div class="film-card-label">
+            <div class="film-card-moment">The Question</div>
+            <div class="film-card-date">December 18, 2023 · San Francisco Bay</div>
+          </div>
+        </div>
+        <div class="film-card" data-lb-src="https://images.unsplash.com/photo-1568387577216-7e0e9e5d7f3a?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Overjoyed — the first embrace as an engaged couple">
+          <img src="https://images.unsplash.com/photo-1568387577216-7e0e9e5d7f3a?w=700&q=82&auto=format&fit=crop" alt="First embrace engaged" loading="lazy">
+          <div class="film-card-label">
+            <div class="film-card-moment">She Said Yes</div>
+            <div class="film-card-date">The moment that changed our lives</div>
+          </div>
+        </div>
+        <div class="film-card film-card-wide" data-lb-src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1600&q=85&auto=format&fit=crop" data-lb-caption="Celebrating with champagne — that same magical evening">
+          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&q=82&auto=format&fit=crop" alt="Champagne celebration" loading="lazy">
+          <div class="film-card-label">
+            <div class="film-card-moment">The Celebration</div>
+            <div class="film-card-date">Champagne, laughter, and happy tears</div>
+          </div>
+        </div>
+        <div class="film-card film-card-wide" data-lb-src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=85&auto=format&fit=crop" data-lb-caption="First dinner as an engaged couple — La Mar, San Francisco">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=82&auto=format&fit=crop" alt="Engagement dinner" loading="lazy">
+          <div class="film-card-label">
+            <div class="film-card-moment">First Dinner as Fiancés</div>
+            <div class="film-card-date">La Mar, San Francisco · December 2023</div>
+          </div>
+        </div>
+        <div class="film-card" data-lb-src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200&q=85&auto=format&fit=crop" data-lb-caption="The ring she never takes off">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=700&q=82&auto=format&fit=crop" alt="The ring" loading="lazy">
+          <div class="film-card-label">
+            <div class="film-card-moment">The Ring</div>
+            <div class="film-card-date">A token of forever</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 4: Adventures mosaic ── -->
+    <div class="album-panel" id="panel-adventures">
+      <div class="mosaic reveal" style="margin-top:48px; grid-auto-rows:90px;">
+        <div class="mosaic-item m1" data-lb-src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&q=85&auto=format&fit=crop" data-lb-caption="Big Sur, California — Summer 2022">
+          <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=82&auto=format&fit=crop" alt="Big Sur" loading="lazy">
+          <div class="entry-media-caption">Big Sur · 2022</div>
+        </div>
+        <div class="mosaic-item m2" data-lb-src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Amalfi Coast, Italy — Honeymoon preview, 2023">
+          <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=700&q=82&auto=format&fit=crop" alt="Amalfi Coast" loading="lazy">
+          <div class="entry-media-caption">Amalfi · 2023</div>
+        </div>
+        <div class="mosaic-item m3" data-lb-src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Hiking in Yosemite — Fall 2022">
+          <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600&q=82&auto=format&fit=crop" alt="Yosemite hike" loading="lazy">
+          <div class="entry-media-caption">Yosemite · 2022</div>
+        </div>
+        <div class="mosaic-item m4" data-lb-src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Kyoto, Japan — Spring 2023">
+          <img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=700&q=82&auto=format&fit=crop" alt="Kyoto" loading="lazy">
+          <div class="entry-media-caption">Kyoto · 2023</div>
+        </div>
+        <div class="mosaic-item m5" data-lb-src="https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Paris in winter — Christmas 2022">
+          <img src="https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=600&q=82&auto=format&fit=crop" alt="Paris winter" loading="lazy">
+          <div class="entry-media-caption">Paris · 2022</div>
+        </div>
+        <div class="mosaic-item m6" data-lb-src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85&auto=format&fit=crop" data-lb-caption="Swiss Alps — New Year 2023">
+          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=82&auto=format&fit=crop" alt="Swiss Alps" loading="lazy">
+          <div class="entry-media-caption">Swiss Alps · 2023</div>
+        </div>
+        <div class="mosaic-item m7" data-lb-src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Maldives — February 2023">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=700&q=82&auto=format&fit=crop" alt="Maldives" loading="lazy">
+          <div class="entry-media-caption">Maldives · 2023</div>
+        </div>
+        <div class="mosaic-item m8" data-lb-src="https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=1200&q=85&auto=format&fit=crop" data-lb-caption="Home, together — the best adventure">
+          <img src="https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=600&q=82&auto=format&fit=crop" alt="Home together" loading="lazy">
+          <div class="entry-media-caption">Home · Always</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="lightbox-close" id="lb-close" aria-label="Close">&times;</button>
+  <button class="lightbox-nav prev" id="lb-prev" aria-label="Previous">&#8249;</button>
+  <img class="lightbox-img" id="lb-img" src="" alt="">
+  <button class="lightbox-nav next" id="lb-next" aria-label="Next">&#8250;</button>
+  <div class="lightbox-caption" id="lb-caption"></div>
+</div>
+
+<hr class="section-divider">
+
+<!-- REGISTRY -->
+<section id="registry">
+  <div class="container">
+    <div class="registry-inner">
+      <p class="section-label reveal">Gifts</p>
+      <h2 class="section-title reveal reveal-delay-1">The <em>Registry</em></h2>
+      <p class="reveal reveal-delay-2">Your presence is our greatest gift. For those who wish to celebrate with something more, we have registered at the following stores.</p>
+      <div class="registry-links reveal reveal-delay-3">
+        <a href="#" class="registry-btn primary">Crate &amp; Barrel</a>
+        <a href="#" class="registry-btn secondary">Williams Sonoma</a>
+        <a href="#" class="registry-btn secondary">Zola</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section id="rsvp">
+  <div class="container">
+    <p class="section-label reveal">You're Invited</p>
+    <h2 class="section-title reveal reveal-delay-1">Kindly <em>Reply</em></h2>
+    <div class="rsvp-inner">
+      <p class="reveal reveal-delay-2">Please RSVP by July 1st, 2024. We can't wait to celebrate with you.</p>
+      <p class="rsvp-deadline reveal reveal-delay-2">Kindly respond by July 1st, 2024</p>
+      <form class="reveal reveal-delay-3" onsubmit="handleRsvp(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane" required>
+          </div>
+          <div class="form-field">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" placeholder="jane@example.com" required>
+          </div>
+          <div class="form-field">
+            <label>Attendance</label>
+            <select required>
+              <option value="" disabled selected>Select one</option>
+              <option>Joyfully accepts</option>
+              <option>Regretfully declines</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Number of Guests</label>
+            <select>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Meal Preference</label>
+            <select>
+              <option value="" disabled selected>Select one</option>
+              <option>Chicken</option>
+              <option>Fish</option>
+              <option>Vegetarian</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field full">
+            <label>Dietary Restrictions or Notes</label>
+            <textarea placeholder="Let us know anything we should be aware of…"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="form-submit">Send My Reply</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-name">Chen &amp; Chen</div>
+    <div class="footer-date">August 24, 2024 · Carmel, California</div>
+  </div>
+  <div class="footer-copy">Made with <span class="footer-heart">♡</span></div>
+</footer>
+
+<script>
+  // ─── NAV SCROLL ───
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ─── PARALLAX HERO ───
+  const heroBg = document.getElementById('hero-bg');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    if (scrolled < window.innerHeight) {
+      heroBg.style.transform = `translateY(${scrolled * 0.35}px)`;
+    }
+  });
+
+  // ─── REVEAL ON SCROLL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // ─── ALBUM TABS ───
+  const tabs = document.querySelectorAll('.album-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.album-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+      // re-trigger reveals for newly shown panel
+      document.querySelectorAll('#panel-' + tab.dataset.panel + ' .reveal').forEach(el => {
+        observer.unobserve(el);
+        el.classList.remove('visible');
+        setTimeout(() => observer.observe(el), 10);
+      });
+    });
+  });
+
+  // ─── LIGHTBOX ───
+  const lightbox = document.getElementById('lightbox');
+  const lbImg    = document.getElementById('lb-img');
+  const lbCap    = document.getElementById('lb-caption');
+  let lbItems = [], lbIndex = 0;
+
+  function openLightbox(items, idx) {
+    lbItems = items;
+    lbIndex = idx;
+    showLb();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function showLb() {
+    const item = lbItems[lbIndex];
+    lbImg.src = item.src;
+    lbImg.alt = item.caption;
+    lbCap.textContent = item.caption;
+  }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  document.querySelectorAll('[data-lb-src]').forEach(el => {
+    el.addEventListener('click', () => {
+      const panel = el.closest('.album-panel, section');
+      const siblings = Array.from(panel.querySelectorAll('[data-lb-src]'));
+      const items = siblings.map(s => ({ src: s.dataset.lbSrc, caption: s.dataset.lbCaption || '' }));
+      openLightbox(items, siblings.indexOf(el));
+    });
+  });
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.getElementById('lb-prev').addEventListener('click', e => {
+    e.stopPropagation();
+    lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length;
+    showLb();
+  });
+  document.getElementById('lb-next').addEventListener('click', e => {
+    e.stopPropagation();
+    lbIndex = (lbIndex + 1) % lbItems.length;
+    showLb();
+  });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') { lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length; showLb(); }
+    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % lbItems.length; showLb(); }
+  });
+
+  // ─── RSVP FORM ───
+  function handleRsvp(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = 'Thank You ♡';
+    btn.style.background = '#556159';
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>
